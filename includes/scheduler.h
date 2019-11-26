@@ -9,6 +9,7 @@
 
 #include <avr/interrupt.h>
 
+
 // Internal variables for mapping AVR's ISR to our cleaner TimerISR model.
 unsigned long tasksPeriodGCD = 1; // Start count from here, down to 0. Default 1ms
 unsigned long tasksPeriodCntDown = 0; // Current internal count of 1ms ticks
@@ -18,7 +19,8 @@ unsigned char tasksNum = 0; // Number of tasks in the scheduler. Default 0 tasks
 ////////////////////////////////////////////////////////////////////////////////
 // Struct for Tasks represent a running process in our simple real-time operating system
 typedef struct task {
-	signed 	 char state; 		//Task's current state
+	unsigned char active;		//Task active or not
+	signed char state; 		    //Task's current state
 	unsigned long period; 		//Task period
 	unsigned long elapsedTime; 	//Time elapsed since last task tick
 	int (*TickFct)(int); 		//Task tick function
@@ -31,11 +33,13 @@ task* tasks;
 void TimerISR() {
     static unsigned char i;
     for (i = 0; i < tasksNum; i++) { 
-        if ( tasks[i].elapsedTime >= tasks[i].period ) { // Ready
-            tasks[i].state = tasks[i].TickFct(tasks[i].state);
-            tasks[i].elapsedTime = 0;
-        }
-        tasks[i].elapsedTime += tasksPeriodGCD;
+		if (tasks[i].active == 0x01){
+			if ( tasks[i].elapsedTime >= tasks[i].period ) { // Ready
+				tasks[i].state = tasks[i].TickFct(tasks[i].state);
+				tasks[i].elapsedTime = 0;
+			}
+		}
+		tasks[i].elapsedTime += tasksPeriodGCD;
     }
 }
 
