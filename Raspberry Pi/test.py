@@ -3,21 +3,16 @@
 import RPi.GPIO as GPIO
 import spidev
 from  mfrc522 import SimpleMFRC522
+from serial import Serial
 from os import system, name
 from time import sleep
 
 def clear():
 	_ = system('clear')
 
-def createSPI(device):
-	spi = spidev.SpiDev()
-	spi.open(0, device)
-	spi.max_speed_hz = 1000000
-	spi.mode = 0
-	return spi
-
 
 reader = SimpleMFRC522()
+atmega = Serial("/dev/ttyS0", 9600)
 
 try:
 	while True:
@@ -46,12 +41,8 @@ try:
 				print("ERROR: Invalid pin")
 				sleep(3)
 		else:
-			pin = input("Enter pin code: ")
-			if newText == pin:
-				print("Access Granted")
-				sleep(3)
-			else:
-				print("Invalid Pin!")
-				sleep(3)
+			print("Tag Recognized")
+			atmega.write(int(9))
+			sleep(3)
 except KeyboardInterrupt:
 	GPIO.cleanup()
