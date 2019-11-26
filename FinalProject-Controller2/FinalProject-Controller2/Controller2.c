@@ -14,14 +14,10 @@ void initPCInt() {
 }
 
 ISR(PCINT0_vect){
-	if (~PINA&0x01){
-		PORTB ^= 0x01;
-		if (currentPosition == 175){
-			setAngle(300);
-		}
-		else {
-			setAngle(175);
-		}
+	if (currentPosition == 175){
+		setAngle(300);
+		_delay_ms(3000);
+		setAngle(175);
 	}
 }
 
@@ -32,6 +28,7 @@ int main(void)
 	DDRB = 0xFF; PORTB = 0x00;
 	initPCInt();
 	initServo();
+	setAngle(175);
 	TimerSet(50);
 	TimerOn();
 	
