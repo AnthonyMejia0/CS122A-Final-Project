@@ -1,5 +1,4 @@
-
-// Permission to copy is granted provided that this header remains intact. 
+// Permission to copy is granted provided that this header remains intact.
 // This software is provided with no warranties.
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -22,7 +21,7 @@ void initUSART(unsigned char usartNum)
 	if (usartNum != 1) {
 		// Turn on the reception circuitry of USART0
 		// Turn on receiver and transmitter
-		// Use 8-bit character sizes 
+		// Use 8-bit character sizes
 		UCSR0B |= (1 << RXEN0)  | (1 << TXEN0);
 		UCSR0C |= (1 << UCSZ00) | (1 << UCSZ01);
 		// Load lower 8-bits of the baud rate value into the low byte of the UBRR0 register

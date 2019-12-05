@@ -11,6 +11,7 @@ void initPCInt() {
 	SREG = 0x01; // Enable global interrupts
 	PCICR = 0x01; // Enable Pin Change Interrupt 0 (Pins 7...0)
 	PCMSK0 = 0x01; // Enable Pin Change Interrupt on PCINT0
+	PCMSK1 = 0x01;
 }
 
 ISR(PCINT0_vect){
@@ -22,6 +23,14 @@ ISR(PCINT0_vect){
 		else {
 			setAngle(175);
 		}
+	}
+}
+
+ISR(PCINT1_vect){
+	if (currentPosition == 175){
+		setAngle(300);
+		_delay_ms(3000);
+		setAngle(175);
 	}
 }
 
